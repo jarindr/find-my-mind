@@ -1,0 +1,26 @@
+.mine-box{
+  background-color: grey;
+  border: 1px solid black;
+  display: inline-block;
+  color:grey;
+}
+.mine-box:hover{
+   filter: brightness(85%);
+  -webkit-filter: brightness(85%);
+}
+.mine-game{
+width: 50%;
+height: 600px;
+float:left;
+}
+.container .header{
+  text-align: center;
+}
+.mine-game-detail{
+  width: 40%;
+  float:right;
+
+}
+.game-container{
+  width:100%;
+}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="../bootstrap-3.3.6-dist/css/bootstrap.css" rel="stylesheet">
+  <link href="../stylesheets/welcome.css" rel="stylesheet">
+  <link href="../stylesheets/game.css" rel="stylesheet">
+  <link href="../stylesheets/lobby.css" rel="stylesheet">
+</head>
+<body>
+  <div class='container'>
+    <div class='state'>
+      <div class='welcome-header'>
+        <h1>FIND MY MINE</h1>
+      </div>
+      <form>
+        <div class='col-sm-4'></div>
+        <div class='col-sm-4'>
+          <div class="form-group">
+            <label>Enter your name</label>
+            <input type="text" class="form-control" id="player-name" placeholder="">
+          </div>
+          <button type="button" class="btn btn-primary" id='join-server'>Join server</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
+<script src='../javascripts/jquery-2.2.0.min.js'></script>
+<script src="../bootstrap-3.3.6-dist/js/bootstrap.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="../javascripts/mineGame.js"></script>

@@ -1,0 +1,22 @@
+.lobby-header{
+  margin-top: 200px;
+  width: 100%;
+  text-align: center;
+}
+.lobby-header h1{
+  font-size: 100px;
+}
+.welcome-player{
+  color:black;
+  font-size: 30px;
+}
+.lobby-player{
+  text-align: right;
+}
+.player-room-container{
+  position: absolute;
+  top: 50px;
+  right:50px;
+}
+.ready-game{
+}
