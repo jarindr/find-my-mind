@@ -1,7 +1,10 @@
 .lobby-header{
-  margin-top: 200px;
-  width: 100%;
-  text-align: center;
+  position: absolute;
+  margin: 0 auto;
+  left: 50%;
+  top:35%;
+  margin-left: -150px;
+
 }
 .lobby-header h1{
   font-size: 100px;
@@ -9,6 +12,9 @@
 .welcome-player{
   color:black;
   font-size: 30px;
+  border: 1px solid black;
+  padding-left: 10px;
+  padding-right:10px;
 }
 .lobby-player{
   text-align: right;
@@ -19,4 +25,5 @@
   right:50px;
 }
 .ready-game{
+  width: 310px;
 }

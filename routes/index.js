@@ -8,6 +8,9 @@ router.get('/', function(req, res, next) {
 router.get('/game', function(req, res, next) {
   res.render('game')
 });
+router.get('/control', function(req, res, next) {
+  res.render('control')
+});
 router.get('/lobby', function(req, res, next) {
   res.render('lobby')
 });

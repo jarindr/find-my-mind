@@ -1,11 +1,19 @@
 var socket
 var initialized=false
+var xxxx
+var grid = 36
 $(document).ready(function () {
-  var mineGame={
+  var mineGame = {
     x:6,
     y:6,
-    data:{coordinate:'',result:''},
+    data:{coordinate:'',result:'',boxes:grid},
     initialize:function(){
+      socket.emit('theBombs',xxxx)
+      mineGame.data.boxes=grid
+      if(grid==49){
+        this.x=grid/7
+        this.y=grid/7
+      }
       mineGame.createGame()
       if(initialized==false){
         initialized=true
@@ -15,7 +23,11 @@ $(document).ready(function () {
         socket.emit('gameReset')
       })
       $('.end-game').on('click',function () {
-        socket.emit('endGame')
+        if($(this).text() == 'Play again'){
+          socket.emit('endGame','trigger')
+        }else{
+          socket.emit('endGame')
+        }
       })
       mineGame.starter()
       socket.emit('initialized')
@@ -29,30 +41,47 @@ $(document).ready(function () {
         html=html+"<div class='row'></div>"
       }
       $(html).appendTo($('.mine-game'))
-      var width=100/this.x
-      var height=100/this.y
+      var width  = 100/this.x
+      var height = 100/this.y
+
       $('.mine-box').css({
-      'width':width+'%',
-      'height':height+'%'}
+        'width':width+'%',
+        'height':height+'%'}
       )
     },
     setUpSocketHandler:function () {
       socket.on("updateMineBox",function (data) {
-        data.result?$("#"+data.coordinate).css('background-color','black')
-        :$("#"+data.coordinate).css('background-color','red')
+        if(data.result){
+          $("#"+data.coordinate).css('background-color','grey')
+
+        }else{
+          $("#"+data.coordinate).css('background-color','none')
+          $("#"+data.coordinate).css('background-image','url(../images/kaboom.jpg)')
+            $("#"+data.coordinate).css('background-size','cover')
+          new Audio('../Music/bomb.mp3',80,false).play()
+        }
+
+
       })
       socket.on('endGameWithResult',function (result) {
-        $('.endgame-result').text(result)
+        if(result == 'winner'){
+          new Audio('../Music/win.mp3',100,false).play()
+        }else{
+          new Audio('../Music/lose.mp3',100,false).play()
+        }
+        $('.endgame-result').fadeIn('slow',function(){
+          $('.endgame-result').prepend('<div style="margin-bottom:15px;">'+result+'</div>')
+        })
       })
       socket.on('active',function (active) {
-        active? mineGame.enable():mineGame.disable()
+        active ? mineGame.enable() : mineGame.disable()
       })
       socket.on('bombCheck',function (result) {
         mineGame.data.result=result
         socket.emit("updateMineBox",mineGame.data)
       })
       socket.on('timerUpdate',function (time) {
-        $('.timer').text(time)
+        $('.timer').text(time+' seconds')
       })
       socket.on('scoreUpdate',function (score) {
         $('.player-score').text(score.join(" VS "))
@@ -90,12 +119,13 @@ $(document).ready(function () {
 
   var lobby={
     initialize:function () {
+
       if(initialized==false){
         this.setUpdateHandler()
       }
-        this.setInputHandler()
-        socket.emit('updatePlayer')
-        socket.emit('updateWelcomePlayer')
+      this.setInputHandler()
+      socket.emit('updatePlayer')
+      socket.emit('updateWelcomePlayer')
     },
     setUpdateHandler:function () {
       socket.on('updatePlayer',function (player) {
@@ -104,7 +134,7 @@ $(document).ready(function () {
 
       })
       socket.on('updateWelcomePlayer',function (player) {
-        $('.welcome-player').text('Welcome: '+player)
+        $('.welcome-player').html('Welcome : '+player)
       })
       socket.on('endGame',function () {
         $('.state').load('lobby',function () {
@@ -121,6 +151,11 @@ $(document).ready(function () {
     },
     setInputHandler:function () {
       $('.ready-game').click(function () {
+        var sound = new Audio('../Music/click.mp3',80,'false')
+        xxxx = $('.theBombs').val()
+        grid = $('.grid').val()
+        console.log(grid)
+        sound.play()
         socket.emit('ready')
         $(this).prop('disabled',true)
       })
@@ -133,11 +168,16 @@ $(document).ready(function () {
     },
     inputHandler:function () {
       $('#join-server').click(function (e) {
+        var sound = new Audio('../Music/click.mp3',80,'false')
+        sound.play()
         e.preventDefault()
-        socket = io.connect('http://localhost:3000')
+        socket = io.connect('http://169.254.119.226:3000')
         socket.emit('playerName',$('#player-name').val()) // send name to player object
-        $('.state').load('/lobby',function () {
-          lobby.initialize()
+        $('.state').fadeOut('slow',function () {
+          $(this).load('/lobby',function () {
+            lobby.initialize()
+            $(this).fadeIn('slow')
+          })
         })
       })
     }

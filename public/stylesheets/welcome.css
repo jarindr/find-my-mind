@@ -1,5 +1,5 @@
 .welcome-header{
-  margin-top: 200px;
+  ;
   width: 100%;
   text-align: center;
 }
@@ -11,10 +11,36 @@ label{
   text-align: center;
   font-size: 30px
 }
+#waiting{
+  font-size: 30px;
+}
+h4{
+  display: inline;
+  text-align: left;
+}
 button{
   width: 50%;
   text-align: center;
 }
 .col-sm-4{
   text-align: center;
+}
+.bomb{
+  width: 100%;
+  text-align: center;
+  margin-top:150px;
+}
+.bomb img{
+  width: 300px;
+}
+body{
+  background-color: #0097A7;
+}
+#player-name{
+  background-color: grey;
+  border: none;
+  text-align: center;
+  color: black;
+  font-size: 20px;
+  font-style: bold;
 }

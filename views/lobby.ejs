@@ -1,14 +1,35 @@
 <div class='lobby-header'>
-  <h1>Lobby</h1>
+  <h1 style='margin-left:10px'>Lobby</h1>
+  <h4>please wait for all player to get ready</h4><span id='waiting'></span><h1></h1>
+  <button type='button' class=' btn btn-success ready-game'>Ready</button>
 </div>
 <div class='player-room-container'>
   <div class='welcome-player'></div>
-  <div class='lobby-player'></div>
+  <div class='lobby-player' style="margin-top:10px;"></div>
+  <select class='theBombs'>
+    <option value=11>11</option>
+    <option value=15>15</option>
+  </select>
+  <select class='grid'>
+    <option value=36>6*6</option>
+    <option value=49>7*7</option>
+  </select>
 </div>
 <div class='lobby-container'>
   <div class='col-sm-4'></div>
   <div class='col-sm-4'>
-    <button type='button' class='btn btn-success ready-game'>Ready</button>
   </div>
-
 </div>
+
+<script>
+var i = 0;
+var loop = function(){
+  $('#waiting').text('.'.repeat(i))
+  i++
+  if(i==4){
+    i=0
+  }
+}
+clearInterval(loop)
+setInterval(loop,500)
+</script>

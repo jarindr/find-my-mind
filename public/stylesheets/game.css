@@ -1,8 +1,10 @@
 .mine-box{
-  background-color: grey;
+  background-color: #0277BD;
   border: 1px solid black;
   display: inline-block;
   color:grey;
+  border-radius: 10px;
+  border: 3px solid black;
 }
 .mine-box:hover{
    filter: brightness(85%);
@@ -23,4 +25,20 @@ float:left;
 }
 .game-container{
   width:100%;
+}
+.timer{
+  font-size: 30px;
+}
+.endgame-result {
+  position: fixed;
+  left:0;
+  top:0;
+  bottom: 0;
+  right:0;
+  background: black;
+  color: white;
+  text-align: center;
+  padding-top:50vh;
+  display: none;
+  font-size:30px;
 }

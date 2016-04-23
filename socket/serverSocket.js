@@ -1,13 +1,17 @@
-var currentUser=0
-var currentTurnPlayer=0
-var players=[]
-var ready=0
-const stopWatch = require('timer-stopwatch')
-const timer=getTimer()
-const maxPlayer=2
-var doOneTime=2
-var boxPressed=0
-var initialized=0
+var currentUser       = 0
+var currentTurnPlayer = 0
+var players           = []
+var ready             = 0
+var stopWatch         = require('timer-stopwatch')
+var timer             = getTimer()
+var maxPlayer         = 2
+var doOneTime         = 2
+var boxPressed        = 0
+var initialized       = 0
+var winner
+var indexServer
+var bombsN = 11
+var bombs
 //global var destory everything we all know that right :
 Array.prototype.shuffle = function () {
   var input = this;
@@ -30,35 +34,58 @@ function Player(socket) {
   this.ready=false
   this.score=0
 }
-Player.prototype.start=function () {
+Player.prototype.start = function () {
   this.onTurn=true
   this.socket.emit('active',true)
 }
-Player.prototype.stop=function () {
+Player.prototype.stop = function () {
   this.onTurn=false
   this.socket.emit('active',false)
 }
-var bombs=createBombs()
+
+
 function getRandomBombSecret(coordinate){
+
   return bombs.indexOf(coordinate)==-1
 }
 
 function createBombs() {
-  var bombs=[]
+  var bombArr=[]
+
   for(var i=0;i<6;i++){
     for(var j=0;j<6;j++){
-      bombs.push(i+'-'+j)
+      bombArr.push(i+'-'+j)
     }
   }
-  bombs=bombs.shuffle().slice(0,12) // due to laziness shuffle all possible and slice out 11 bombs
-  return bombs
+  console.log(bombsN)
+  return bombArr.shuffle().slice(0,bombsN) // due to laziness shuffle all possible and slice out 11 bombs
+
 
 }
 
 function socketHandler(io){
   io.on('connection', function (socket) {
-    players.push(new Player(socket))
-    console.log('user connected');
+    console.log('connected with id ',socket._id)
+    var str = socket.handshake.headers.referer||''
+    if(str == ''){
+      indexServer = socket
+    }
+    socket.on('theBombs',function (data) {
+      bombsN=data
+      bombs= createBombs()
+
+    })
+    var w =str.substring(str.lastIndexOf('/')+1)||null
+    if(w!='control'){
+      players.push(new Player(socket))
+      console.log('user connected')
+    }else{
+      console.log('admin connected')
+    }
+    socket.on('success',function () {
+      socket.emit('success')
+    })
+
 
     currentUser++
     console.log('currentUser: ',currentUser)
@@ -71,12 +98,23 @@ function socketHandler(io){
     socket.on('updateMineBox', function (data) {
       io.emit('updateMineBox',data)
       boxPressed++
-      if(boxPressed==36){
+      console.log(boxPressed,data.boxes)
+      if(boxPressed==data.boxes){
         var scoreArr=players.map(function (player) {
           return player.score
         })
-        players[scoreArr.indexOf(Math.min(...scoreArr))].socket.emit('endGameWithResult','loser')
-        players[scoreArr.indexOf(Math.max(...scoreArr))].socket.emit('endGameWithResult','winner')
+
+        winner = scoreArr.indexOf(Math.max(...scoreArr))
+        var winIndex = scoreArr.indexOf(Math.min(...scoreArr))
+        var loseIndex = scoreArr.indexOf(Math.max(...scoreArr))
+        if(winIndex!=loseIndex){
+          players[winIndex].socket.emit('endGameWithResult','loser')
+          players[loseIndex].socket.emit('endGameWithResult','winner')
+        }else{
+          for(player of players){
+            player.socket.emit('endGameWithResult','draw')
+          }
+        }
         resetGame()
       }
     })
@@ -99,7 +137,7 @@ function socketHandler(io){
         return player.name
       }))
       ready++
-      ready==players.length? startGame(io):null
+      ready == players.length? startGame(io):null
     })
 
     socket.on('playerName',function (name) {
@@ -136,9 +174,9 @@ function socketHandler(io){
       io.emit('endGame')
     })
     socket.on('initialized',function () {
-      initialized++
-      if(initialized==players.length){
-        currentTurnPlayer=Math.floor(Math.random()*players.length) // random first player
+      initialized ++
+      if(initialized == players.length){
+        currentTurnPlayer = winner || Math.floor(Math.random()*players.length) // random first player
         players[currentTurnPlayer].start()
         timer.start()
       }
@@ -160,12 +198,14 @@ function socketHandler(io){
 
   })
 }
+
 function resetGame() {
   ready=0
   currentTurnPlayer=0
   boxPressed=0
   initialized=0
   timer.reset()
+  bombs = createBombs()
   players.map(function(player,index){
     players[index].score=0
     players[index].ready=false
@@ -215,4 +255,4 @@ function getTimer() {
 
 
 
-module.exports=socketHandler
+module.exports = socketHandler

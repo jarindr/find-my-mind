@@ -8,25 +8,32 @@
 </head>
 <body>
   <div class='container'>
-    <div class='state'>
-      <div class='welcome-header'>
-        <h1>FIND MY MINE</h1>
-      </div>
-      <form>
-        <div class='col-sm-4'></div>
-        <div class='col-sm-4'>
-          <div class="form-group">
-            <label>Enter your name</label>
-            <input type="text" class="form-control" id="player-name" placeholder="">
-          </div>
-          <button type="button" class="btn btn-primary" id='join-server'>Join server</button>
+    <audio controls autoplay="true" loop="true" style="display:none;">
+      <source src="../Music/bg.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+      <div class='state'>
+        <div class='bomb'>
+          <img src='../images/bomb.png'>
         </div>
-      </form>
+        <div class='welcome-header'>
+          <h1>FIND MY MINE</h1>
+        </div>
+        <form>
+          <div class='col-sm-4'></div>
+          <div class='col-sm-4'>
+            <div class="form-group">
+              <label>Enter your name</label>
+              <input type="text" class="form-control" id="player-name" autocomplete="off" placeholder="">
+            </div>
+            <button type="button" class="btn btn-primary" id='join-server'>Join server</button>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
-</body>
-</html>
-<script src='../javascripts/jquery-2.2.0.min.js'></script>
-<script src="../bootstrap-3.3.6-dist/js/bootstrap.js"></script>
-<script src="/socket.io/socket.io.js"></script>
-<script src="../javascripts/mineGame.js"></script>
+  </body>
+  </html>
+  <script src='../javascripts/jquery-2.2.0.min.js'></script>
+  <script src="../bootstrap-3.3.6-dist/js/bootstrap.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="../javascripts/mineGame.js"></script>
